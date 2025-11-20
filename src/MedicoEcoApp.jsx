@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calculator, Copy, Moon, Sun, RotateCcw, AlertCircle, CheckCircle, XCircle, DollarSign, Users, Target, Award, TrendingUp, ChevronDown, ChevronUp } from 'lucide-react';
-
-function Circle({ size = 24 }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-      <circle cx="12" cy="12" r="10" />
-    </svg>
-  );
-}
+import { Calculator, Copy, Moon, Sun, RotateCcw, AlertCircle, CheckCircle, XCircle, DollarSign, Users, Target, Award, TrendingUp } from 'lucide-react';
 
 const QUESTIONS = [
   {
@@ -64,6 +56,16 @@ export default function MedicoEcoApp() {
   const [showResults, setShowResults] = useState(false);
   const [darkMode, setDarkMode] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  const isMobile = windowWidth < 768;
+  const isTablet = windowWidth >= 768 && windowWidth < 1024;
 
   const answeredCount = Object.values(answers).filter(a => a !== null).length;
   const progress = Math.round((answeredCount / TOTAL_QUESTIONS) * 100);
@@ -86,7 +88,8 @@ export default function MedicoEcoApp() {
           "Planifier la collecte des données de coûts",
           "Prévoir le budget nécessaire",
           "Intégrer dans le protocole et la demande de financement"
-        ]
+        ],
+        color: "#dc2626"
       };
     } else if (score >= 3) {
       return {
@@ -97,7 +100,8 @@ export default function MedicoEcoApp() {
           "Mentionner comme objectif secondaire",
           "Envisager une analyse coût-conséquence",
           "Consulter un méthodologiste pour validation"
-        ]
+        ],
+        color: "#d97706"
       };
     } else {
       return {
@@ -108,7 +112,8 @@ export default function MedicoEcoApp() {
           "Éviter toute complexité méthodologique inutile",
           "Garder les ressources pour le suivi clinique",
           "Documenter simplement les coûts standards si besoin"
-        ]
+        ],
+        color: "#16a34a"
       };
     }
   };
@@ -122,355 +127,8 @@ export default function MedicoEcoApp() {
     }
   };
 
-  // Styles CSS en objet JavaScript
-  const styles = {
-    container: {
-      minHeight: '100vh',
-      backgroundColor: darkMode ? '#1f2937' : '#f8fafc',
-      transition: 'background-color 0.5s'
-    },
-    header: {
-      backgroundColor: darkMode ? '#374151' : 'white',
-      borderRadius: '16px',
-      padding: '32px',
-      marginBottom: '32px',
-      boxShadow: '0 10px 25px rgba(0,0,0,0.1)'
-    },
-    section: {
-      backgroundColor: darkMode ? '#374151' : 'white',
-      borderRadius: '16px',
-      padding: '24px',
-      marginBottom: '24px',
-      boxShadow: '0 4px 6px rgba(0,0,0,0.05)'
-    },
-    questionCard: {
-      backgroundColor: darkMode ? '#4b5563' : '#f9fafb',
-      borderRadius: '12px',
-      padding: '20px',
-      marginBottom: '16px',
-      border: `1px solid ${darkMode ? '#6b7280' : '#e5e7eb'}`,
-      transition: 'all 0.3s'
-    },
-    button: {
-      flex: 1,
-      padding: '16px',
-      borderRadius: '8px',
-      fontWeight: 'bold',
-      fontSize: '16px',
-      transition: 'all 0.2s',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      gap: '8px'
-    },
-    buttonYes: {
-      backgroundColor: '#16a34a',
-      color: 'white',
-      transform: 'scale(1.02)'
-    },
-    buttonNo: {
-      backgroundColor: '#dc2626',
-      color: 'white',
-      transform: 'scale(1.02)'
-    },
-    buttonInactive: {
-      backgroundColor: darkMode ? '#4b5563' : 'white',
-      color: darkMode ? '#d1d5db' : '#374151',
-      border: `2px solid ${darkMode ? '#6b7280' : '#d1d5db'}`
-    },
-    progressBar: {
-      width: '100%',
-      backgroundColor: darkMode ? '#4b5563' : '#e5e7eb',
-      borderRadius: '8px',
-      height: '12px',
-      overflow: 'hidden'
-    },
-    progressFill: {
-      height: '100%',
-      background: 'linear-gradient(to right, #4f46e5, #7c3aed)',
-      transition: 'width 0.6s ease',
-      width: `${progress}%`
-    },
-    resultCard: {
-      backgroundColor: score >= 6 ? '#fef2f2' : score >= 3 ? '#fffbeb' : '#f0fdf4',
-      border: `2px solid ${score >= 6 ? '#f87171' : score >= 3 ? '#f59e0b' : '#4ade80'}`,
-      borderRadius: '16px',
-      padding: '32px',
-      marginBottom: '32px',
-      boxShadow: '0 20px 25px rgba(0,0,0,0.1)'
-    }
-  };
-
-  return (
-    <div style={styles.container}>
-      <div style={{ maxWidth: '800px', margin: '0 auto', padding: '16px' }}>
-        
-        {/* Header */}
-        <div style={styles.header}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
-            <div>
-              <div style={{ 
-                display: 'inline-flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                width: '64px', 
-                height: '64px', 
-                background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
-                borderRadius: '50%',
-                marginBottom: '16px'
-              }}>
-                <Calculator size={32} color="white" />
-              </div>
-              <h1 style={{ 
-                fontSize: '32px', 
-                fontWeight: 'bold', 
-                color: darkMode ? 'white' : '#1f2937',
-                margin: 0
-              }}>
-                Faut-il un volet médico-économique ?
-              </h1>
-              <p style={{ 
-                color: darkMode ? '#d1d5db' : '#6b7280',
-                fontSize: '18px',
-                margin: '8px 0 0 0'
-              }}>
-                Outil d'aide à la décision pour les enquêteurs
-              </p>
-              <p style={{ 
-                color: darkMode ? '#9ca3af' : '#9ca3af',
-                fontSize: '14px',
-                margin: '8px 0 0 0'
-              }}>
-                <strong>5 minutes</strong> : Répondez à 15 questions pour obtenir une recommandation claire
-              </p>
-            </div>
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              style={{
-                padding: '12px',
-                borderRadius: '12px',
-                backgroundColor: darkMode ? '#4b5563' : '#f3f4f6',
-                border: 'none',
-                cursor: 'pointer'
-              }}
-            >
-              {darkMode ? <Sun size={24} color="#fbbf24" /> : <Moon size={24} color="#4b5563" />}
-            </button>
-          </div>
-
-          <div style={{ marginTop: '32px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
-              <span style={{ 
-                fontWeight: '600', 
-                color: darkMode ? '#d1d5db' : '#374151' 
-              }}>
-                Progression {progress}%
-              </span>
-              <span style={{ 
-                fontWeight: 'bold', 
-                color: '#4f46e5' 
-              }}>
-                {answeredCount}/{TOTAL_QUESTIONS} questions répondues
-              </span>
-            </div>
-            <div style={styles.progressBar}>
-              <div style={styles.progressFill} />
-            </div>
-          </div>
-        </div>
-
-        {/* Questions */}
-        {QUESTIONS.map((section) => (
-          <div key={section.section} style={styles.section}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
-              <div style={{ color: '#4f46e5' }}>
-                <section.icon size={28} />
-              </div>
-              <h2 style={{ 
-                fontSize: '20px', 
-                fontWeight: 'bold', 
-                color: darkMode ? 'white' : '#1f2937',
-                margin: 0
-              }}>
-                {section.section}
-              </h2>
-            </div>
-
-            <div>
-              {section.items.map(({ id, text, detail }) => {
-                const answered = answers[id];
-                return (
-                  <div key={id} style={styles.questionCard}>
-                    <p style={{ 
-                      fontWeight: '600', 
-                      color: darkMode ? 'white' : '#1f2937',
-                      fontSize: '16px',
-                      margin: '0 0 8px 0'
-                    }}>
-                      {text}
-                    </p>
-                    {detail && (
-                      <p style={{ 
-                        fontSize: '14px', 
-                        color: darkMode ? '#9ca3af' : '#6b7280',
-                        fontStyle: 'italic',
-                        margin: '0 0 16px 0'
-                      }}>
-                        {detail}
-                      </p>
-                    )}
-
-                    <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
-                      <button
-                        onClick={() => handleAnswer(id, true)}
-                        style={{
-                          ...styles.button,
-                          ...(answered === true ? styles.buttonYes : styles.buttonInactive)
-                        }}
-                      >
-                        {answered === true ? <CheckCircle size={20} /> : <Circle size={20} />}
-                        OUI
-                      </button>
-                      <button
-                        onClick={() => handleAnswer(id, false)}
-                        style={{
-                          ...styles.button,
-                          ...(answered === false ? styles.buttonNo : styles.buttonInactive)
-                        }}
-                      >
-                        {answered === false ? <XCircle size={20} /> : <Circle size={20} />}
-                        NON
-                      </button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        ))}
-
-        {/* Actions */}
-        <div style={{ display: 'flex', gap: '16px', marginBottom: '32px' }}>
-          <button
-            onClick={() => setShowResults(true)}
-            disabled={!allAnswered}
-            style={{
-              flex: 1,
-              padding: '20px',
-              background: allAnswered ? 'linear-gradient(to right, #4f46e5, #7c3aed)' : (darkMode ? '#4b5563' : '#d1d5db'),
-              color: 'white',
-              borderRadius: '12px',
-              fontWeight: 'bold',
-              fontSize: '18px',
-              border: 'none',
-              cursor: allAnswered ? 'pointer' : 'not-allowed',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '12px'
-            }}
-          >
-            <Calculator size={24} />
-            Voir les résultats
-          </button>
-          <button
-            onClick={reset}
-            style={{
-              padding: '20px 24px',
-              backgroundColor: darkMode ? '#4b5563' : '#e5e7eb',
-              color: darkMode ? '#d1d5db' : '#374151',
-              borderRadius: '12px',
-              fontWeight: 'bold',
-              border: 'none',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '8px'
-            }}
-          >
-            <RotateCcw size={20} />
-            Réinitialiser
-          </button>
-        </div>
-
-        {/* Résultats */}
-        {showResults && allAnswered && (
-          <div style={styles.resultCard}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
-              <div style={{ 
-                backgroundColor: score >= 6 ? '#dc2626' : score >= 3 ? '#d97706' : '#16a34a',
-                color: 'white',
-                padding: '16px',
-                borderRadius: '50%'
-              }}>
-                {score >= 6 ? <AlertCircle size={32} /> : score >= 3 ? <AlertCircle size={32} /> : <CheckCircle size={32} />}
-              </div>
-              <div>
-                <span style={{
-                  backgroundColor: score >= 6 ? '#dc2626' : score >= 3 ? '#d97706' : '#16a34a',
-                  color: 'white',
-                  padding: '8px 16px',
-                  borderRadius: '20px',
-                  fontWeight: 'bold',
-                  fontSize: '14px'
-                }}>
-                  Score : {score}/15
-                </span>
-                <h3 style={{
-                  fontSize: '24px',
-                  fontWeight: 'bold',
-                  color: score >= 6 ? '#dc2626' : score >= 3 ? '#d97706' : '#16a34a',
-                  margin: '12px 0 0 0'
-                }}>
-                  {recommendation.title}
-                </h3>
-              </div>
-            </div>
-
-            <div style={{
-              backgroundColor: 'white',
-              borderRadius: '12px',
-              padding: '24px',
-              boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.05)'
-            }}>
-              <p style={{
-                fontSize: '16px',
-                fontWeight: '500',
-                color: '#374151',
-                lineHeight: '1.6',
-                margin: '0 0 24px 0'
-              }}>
-                {recommendation.action}
-              </p>
-
-              <h4 style={{
-                fontSize: '20px',
-                fontWeight: 'bold',
-                color: '#1f2937',
-                margin: '0 0 16px 0'
-              }}>
-                Prochaines étapes recommandées
-              </h4>
-              <ol style={{ paddingLeft: '20px', margin: 0 }}>
-                {recommendation.steps.map((step, i) => (
-                  <li key={i} style={{ 
-                    color: '#374151',
-                    fontSize: '16px',
-                    lineHeight: '1.6',
-                    marginBottom: '12px',
-                    paddingLeft: '8px'
-                  }}>
-                    {step}
-                  </li>
-                ))}
-              </ol>
-            </div>
-
-            <div style={{ marginTop: '24px' }}>
-              <button
-                onClick={() => {
-                  const reportText = `
+  const copyReport = () => {
+    const reportText = `
 ÉVALUATION VOLET MÉDICO-ÉCONOMIQUE
 Date : ${new Date().toLocaleDateString('fr-FR')}
 ${'='.repeat(50)}
@@ -483,31 +141,435 @@ ${recommendation.action}
 
 Prochaines étapes :
 ${recommendation.steps.map((step, i) => `${i + 1}. ${step}`).join('\n')}
-                  `.trim();
-                  
-                  navigator.clipboard.writeText(reportText);
-                  setCopied(true);
-                  setTimeout(() => setCopied(false), 2000);
-                }}
-                style={{
-                  width: '100%',
-                  padding: '16px',
-                  backgroundColor: '#4f46e5',
+    `.trim();
+    
+    navigator.clipboard.writeText(reportText);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  // Styles responsive
+  const containerStyle = {
+    minHeight: '100vh',
+    backgroundColor: darkMode ? '#111827' : '#f3f4f6',
+    transition: 'background-color 0.3s',
+    padding: isMobile ? '12px' : '20px'
+  };
+
+  const cardStyle = {
+    backgroundColor: darkMode ? '#1f2937' : 'white',
+    borderRadius: isMobile ? '8px' : '12px',
+    padding: isMobile ? '16px' : '24px',
+    marginBottom: isMobile ? '16px' : '20px',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+  };
+
+  const headerTitleStyle = {
+    fontSize: isMobile ? '20px' : isTablet ? '24px' : '28px',
+    fontWeight: 'bold', 
+    color: darkMode ? 'white' : '#1f2937',
+    margin: 0,
+    lineHeight: 1.2
+  };
+
+  const sectionTitleStyle = {
+    fontSize: isMobile ? '16px' : '18px', 
+    fontWeight: 'bold', 
+    color: darkMode ? 'white' : '#1f2937',
+    margin: 0
+  };
+
+  const questionTextStyle = {
+    fontWeight: '600', 
+    color: darkMode ? 'white' : '#1f2937',
+    margin: '0 0 8px 0',
+    fontSize: isMobile ? '14px' : '16px',
+    lineHeight: 1.4
+  };
+
+  const buttonStyle = {
+    padding: isMobile ? '10px 12px' : '12px 16px',
+    borderRadius: '6px',
+    fontWeight: 'bold',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '6px',
+    fontSize: isMobile ? '14px' : '16px'
+  };
+
+  return (
+    <div style={containerStyle}>
+      <div style={{ 
+        maxWidth: '800px', 
+        margin: '0 auto',
+        width: '100%'
+      }}>
+        
+        {/* Header */}
+        <div style={cardStyle}>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: isMobile ? 'column' : 'row',
+            justifyContent: 'space-between', 
+            alignItems: isMobile ? 'flex-start' : 'flex-start',
+            gap: isMobile ? '16px' : '0',
+            marginBottom: '20px' 
+          }}>
+            <div style={{ 
+              flex: 1,
+              display: 'flex',
+              flexDirection: isMobile ? 'column' : 'row',
+              alignItems: isMobile ? 'flex-start' : 'center',
+              gap: isMobile ? '12px' : '16px'
+            }}>
+              <div style={{ 
+                width: isMobile ? '50px' : '60px', 
+                height: isMobile ? '50px' : '60px', 
+                background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                <Calculator size={isMobile ? 24 : 32} color="white" />
+              </div>
+              <div style={{ flex: 1 }}>
+                <h1 style={headerTitleStyle}>
+                  Faut-il un volet médico-économique ?
+                </h1>
+                <p style={{ 
+                  color: darkMode ? '#d1d5db' : '#6b7280',
+                  margin: '4px 0 0 0',
+                  fontSize: isMobile ? '14px' : '16px'
+                }}>
+                  Outil d'aide à la décision pour les enquêteurs
+                </p>
+                
+                <div style={{ 
+                  backgroundColor: darkMode ? '#374151' : '#f3f4f6',
+                  padding: isMobile ? '8px 12px' : '12px 16px',
+                  borderRadius: '6px',
+                  marginTop: '12px'
+                }}>
+                  <p style={{ 
+                    color: darkMode ? '#e5e7eb' : '#4b5563',
+                    fontSize: isMobile ? '12px' : '14px',
+                    margin: 0,
+                    lineHeight: 1.4
+                  }}>
+                    <strong>{isMobile ? '5 min' : '5 minutes'}</strong> : {isMobile ? '15 questions pour une recommandation' : 'Répondez à 15 questions pour obtenir une recommandation claire'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              style={{
+                padding: isMobile ? '8px' : '12px',
+                borderRadius: '6px',
+                backgroundColor: darkMode ? '#374151' : '#f3f4f6',
+                border: 'none',
+                cursor: 'pointer',
+                alignSelf: isMobile ? 'flex-end' : 'flex-start',
+                marginTop: isMobile ? '-50px' : '0'
+              }}
+            >
+              {darkMode ? <Sun size={isMobile ? 18 : 20} color="#fbbf24" /> : <Moon size={isMobile ? 18 : 20} color="#4b5563" />}
+            </button>
+          </div>
+
+          <div style={{ marginTop: '20px' }}>
+            <div style={{ 
+              display: 'flex', 
+              justifyContent: 'space-between', 
+              alignItems: 'center',
+              marginBottom: '8px',
+              flexWrap: 'wrap',
+              gap: '4px'
+            }}>
+              <span style={{ 
+                fontWeight: '600', 
+                color: darkMode ? '#d1d5db' : '#374151',
+                fontSize: isMobile ? '12px' : '14px'
+              }}>
+                Progression {progress}%
+              </span>
+              <span style={{ 
+                fontWeight: 'bold', 
+                color: '#4f46e5',
+                fontSize: isMobile ? '12px' : '14px'
+              }}>
+                {answeredCount}/{TOTAL_QUESTIONS} questions
+              </span>
+            </div>
+            <div style={{
+              width: '100%',
+              backgroundColor: darkMode ? '#374151' : '#e5e7eb',
+              borderRadius: '6px',
+              height: isMobile ? '6px' : '8px',
+              overflow: 'hidden'
+            }}>
+              <div style={{
+                height: '100%',
+                background: 'linear-gradient(to right, #4f46e5, #7c3aed)',
+                width: `${progress}%`,
+                transition: 'width 0.3s ease-in-out',
+                borderRadius: '6px'
+              }} />
+            </div>
+          </div>
+        </div>
+
+        {/* Questions */}
+        {QUESTIONS.map((section) => (
+          <div key={section.section} style={cardStyle}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: isMobile ? '8px' : '12px', 
+              marginBottom: '16px' 
+            }}>
+              <section.icon size={isMobile ? 20 : 24} color={darkMode ? '#9ca3af' : '#6b7280'} />
+              <h2 style={sectionTitleStyle}>
+                {section.section}
+              </h2>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {section.items.map(({ id, text, detail }) => {
+                const answered = answers[id];
+                return (
+                  <div key={id} style={{
+                    backgroundColor: darkMode ? '#374151' : '#f9fafb',
+                    borderRadius: '6px',
+                    padding: isMobile ? '12px' : '16px',
+                    border: `1px solid ${darkMode ? '#4b5563' : '#e5e7eb'}`
+                  }}>
+                    <p style={questionTextStyle}>
+                      {text}
+                    </p>
+                    {detail && (
+                      <p style={{ 
+                        fontSize: isMobile ? '12px' : '14px', 
+                        color: darkMode ? '#9ca3af' : '#6b7280',
+                        fontStyle: 'italic',
+                        margin: '0 0 8px 0',
+                        lineHeight: 1.4
+                      }}>
+                        {detail}
+                      </p>
+                    )}
+
+                    <div style={{ 
+                      display: 'flex', 
+                      gap: '8px',
+                      flexDirection: isMobile ? 'column' : 'row'
+                    }}>
+                      <button
+                        onClick={() => handleAnswer(id, true)}
+                        style={{
+                          ...buttonStyle,
+                          flex: isMobile ? 1 : 1,
+                          backgroundColor: answered === true ? '#16a34a' : (darkMode ? '#4b5563' : 'white'),
+                          color: answered === true ? 'white' : (darkMode ? '#d1d5db' : '#374151'),
+                          border: answered === true ? 'none' : `1px solid ${darkMode ? '#6b7280' : '#d1d5db'}`,
+                        }}
+                      >
+                        {answered === true ? <CheckCircle size={isMobile ? 16 : 18} /> : 'O'}
+                        OUI
+                      </button>
+                      <button
+                        onClick={() => handleAnswer(id, false)}
+                        style={{
+                          ...buttonStyle,
+                          flex: isMobile ? 1 : 1,
+                          backgroundColor: answered === false ? '#dc2626' : (darkMode ? '#4b5563' : 'white'),
+                          color: answered === false ? 'white' : (darkMode ? '#d1d5db' : '#374151'),
+                          border: answered === false ? 'none' : `1px solid ${darkMode ? '#6b7280' : '#d1d5db'}`,
+                        }}
+                      >
+                        {answered === false ? <XCircle size={isMobile ? 16 : 18} /> : 'O'}
+                        NON
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ))}
+
+        {/* Actions */}
+        <div style={{ 
+          display: 'flex', 
+          gap: '12px', 
+          marginBottom: '20px',
+          flexDirection: isMobile ? 'column' : 'row'
+        }}>
+          <button
+            onClick={() => setShowResults(true)}
+            disabled={!allAnswered}
+            style={{
+              flex: 1,
+              padding: isMobile ? '14px 16px' : '16px 20px',
+              background: allAnswered ? 'linear-gradient(to right, #4f46e5, #7c3aed)' : (darkMode ? '#374151' : '#d1d5db'),
+              color: 'white',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              border: 'none',
+              cursor: allAnswered ? 'pointer' : 'not-allowed',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              fontSize: isMobile ? '14px' : '16px'
+            }}
+          >
+            <Calculator size={isMobile ? 18 : 20} />
+            {isMobile ? 'Résultats' : 'Voir les résultats'}
+          </button>
+          <button
+            onClick={reset}
+            style={{
+              padding: isMobile ? '14px 16px' : '16px 20px',
+              backgroundColor: darkMode ? '#374151' : '#e5e7eb',
+              color: darkMode ? '#d1d5db' : '#374151',
+              borderRadius: '8px',
+              fontWeight: 'bold',
+              border: 'none',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px',
+              fontSize: isMobile ? '14px' : '16px',
+              minWidth: isMobile ? 'auto' : '140px'
+            }}
+          >
+            <RotateCcw size={isMobile ? 16 : 18} />
+            {isMobile ? 'Reset' : 'Réinitialiser'}
+          </button>
+        </div>
+
+        {/* Résultats */}
+        {showResults && allAnswered && (
+          <div style={{
+            backgroundColor: `${recommendation.color}15`,
+            border: `2px solid ${recommendation.color}`,
+            borderRadius: isMobile ? '8px' : '12px',
+            padding: isMobile ? '16px' : '24px',
+            marginBottom: '20px'
+          }}>
+            <div style={{ 
+              display: 'flex', 
+              alignItems: isMobile ? 'flex-start' : 'center', 
+              gap: '12px', 
+              marginBottom: '16px',
+              flexDirection: isMobile ? 'column' : 'row'
+            }}>
+              <div style={{ 
+                backgroundColor: recommendation.color,
+                color: 'white',
+                padding: isMobile ? '10px' : '12px',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flexShrink: 0
+              }}>
+                {score >= 6 ? <AlertCircle size={isMobile ? 20 : 24} /> : score >= 3 ? <AlertCircle size={isMobile ? 20 : 24} /> : <CheckCircle size={isMobile ? 20 : 24} />}
+              </div>
+              <div style={{ flex: 1 }}>
+                <span style={{
+                  backgroundColor: recommendation.color,
                   color: 'white',
+                  padding: '4px 10px',
                   borderRadius: '12px',
                   fontWeight: 'bold',
-                  border: 'none',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px'
-                }}
-              >
-                <Copy size={20} />
-                {copied ? 'Copié !' : 'Copier le rapport'}
-              </button>
+                  fontSize: isMobile ? '12px' : '14px',
+                  display: 'inline-block',
+                  marginBottom: '8px'
+                }}>
+                  Score : {score}/15
+                </span>
+                <h3 style={{
+                  fontSize: isMobile ? '16px' : '20px',
+                  fontWeight: 'bold',
+                  color: recommendation.color,
+                  margin: 0,
+                  lineHeight: 1.3
+                }}>
+                  {recommendation.title}
+                </h3>
+              </div>
             </div>
+
+            <div style={{
+              backgroundColor: darkMode ? '#1f2937' : 'white',
+              borderRadius: '6px',
+              padding: isMobile ? '12px' : '20px',
+              marginBottom: '16px'
+            }}>
+              <p style={{
+                color: darkMode ? '#e5e7eb' : '#374151',
+                lineHeight: 1.5,
+                margin: '0 0 12px 0',
+                fontSize: isMobile ? '14px' : '16px'
+              }}>
+                {recommendation.action}
+              </p>
+
+              <h4 style={{
+                fontSize: isMobile ? '14px' : '16px',
+                fontWeight: 'bold',
+                color: darkMode ? 'white' : '#1f2937',
+                margin: '0 0 8px 0'
+              }}>
+                Prochaines étapes recommandées :
+              </h4>
+              <ol style={{ 
+                paddingLeft: '18px', 
+                margin: 0,
+                fontSize: isMobile ? '13px' : '15px'
+              }}>
+                {recommendation.steps.map((step, i) => (
+                  <li key={i} style={{ 
+                    color: darkMode ? '#e5e7eb' : '#374151',
+                    lineHeight: 1.5,
+                    marginBottom: '6px'
+                  }}>
+                    {step}
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <button
+              onClick={copyReport}
+              style={{
+                width: '100%',
+                padding: isMobile ? '12px 16px' : '12px 16px',
+                backgroundColor: '#4f46e5',
+                color: 'white',
+                borderRadius: '6px',
+                fontWeight: 'bold',
+                border: 'none',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '6px',
+                fontSize: isMobile ? '14px' : '16px'
+              }}
+            >
+              <Copy size={isMobile ? 16 : 18} />
+              {copied ? 'Copié !' : (isMobile ? 'Copier rapport' : 'Copier le rapport')}
+            </button>
           </div>
         )}
 
@@ -515,16 +577,19 @@ ${recommendation.steps.map((step, i) => `${i + 1}. ${step}`).join('\n')}
         <div style={{ 
           textAlign: 'center', 
           color: darkMode ? '#9ca3af' : '#6b7280',
-          fontSize: '14px',
-          padding: '32px 0'
+          fontSize: isMobile ? '12px' : '14px',
+          padding: '24px 0 12px 0',
+          lineHeight: 1.5
         }}>
-          <p style={{ fontWeight: '600', color: darkMode ? '#d1d5db' : '#374151', margin: '0 0 4px 0' }}>
+          <p style={{ 
+            fontWeight: '600', 
+            color: darkMode ? '#d1d5db' : '#374151', 
+            margin: '0 0 4px 0' 
+          }}>
             Kiyali COULIBALY
           </p>
-          <p style={{ margin: '0 0 4px 0' }}>Économiste de la santé</p>
-          <p style={{ margin: '0 0 16px 0' }}>CHU Poitiers & Limoges</p>
-          <p style={{ margin: '0 0 4px 0' }}>Références : HAS, DRCI, PHRC, INCa, DGOS</p>
-          <p style={{ margin: '4px 0 0 0' }}>Outil open-source • Version 2.0 • 2025</p>
+          <p style={{ margin: '0 0 4px 0' }}>Économiste de la santé - CHU Poitiers | Limoges</p>
+          <p style={{ margin: '12px 0 0 0' }}>Outil open-source • Version 2.0 • 2025</p>
         </div>
       </div>
     </div>
